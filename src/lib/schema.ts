@@ -32,3 +32,10 @@ export const boardSchema = z.object({
   updatedAt: z.string(),
 });
 export type Board = z.infer<typeof boardSchema>;
+
+export const taskFormSchema = taskSchema.pick({
+  title: true,
+  description: true,
+  priority: true,
+});
+export type TaskFormValues = z.infer<typeof taskFormSchema>;
