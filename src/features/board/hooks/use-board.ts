@@ -1,14 +1,13 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { boardRepository } from "@/lib/storage/board-repository";
 import { columnRepository } from "@/lib/storage/column-repository";
 import { taskRepository } from "@/lib/storage/task-repository";
+import { setLastBoardId } from "@/lib/storage/preferences";
 import type { Board, Column, Task } from "@/lib/schema";
 
-const DEFAULT_COLUMNS = ["To Do", "In Progress", "Done"];
-
-export function useBoard() {
+export function useBoard(boardId: string) {
   const [board, setBoard] = useState<Board | null>(null);
   const [columns, setColumns] = useState<Column[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -18,25 +17,26 @@ export function useBoard() {
     setIsLoading(true);
 
     const boards = await boardRepository.getAll();
-    let activeBoard = boards[0];
+    const activeBoard = boards.find((b) => b.id === boardId) ?? null;
 
-    if (!activeBoard) {
-      activeBoard = await boardRepository.create("My Board");
-      for (const title of DEFAULT_COLUMNS) {
-        await columnRepository.create({ boardId: activeBoard.id, title });
-      }
+    if (activeBoard) {
+      setLastBoardId(activeBoard.id);
+
+      const [loadedColumns, loadedTasks] = await Promise.all([
+        columnRepository.getByBoard(activeBoard.id),
+        taskRepository.getByBoard(activeBoard.id),
+      ]);
+
+      setColumns(loadedColumns);
+      setTasks(loadedTasks);
+    } else {
+      setColumns([]);
+      setTasks([]);
     }
 
-    const [loadedColumns, loadedTasks] = await Promise.all([
-      columnRepository.getByBoard(activeBoard.id),
-      taskRepository.getByBoard(activeBoard.id),
-    ]);
-
     setBoard(activeBoard);
-    setColumns(loadedColumns);
-    setTasks(loadedTasks);
     setIsLoading(false);
-  }, []);
+  }, [boardId]);
 
   useEffect(() => {
     loadBoard();
