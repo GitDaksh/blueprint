@@ -11,7 +11,7 @@ export function Sidebar() {
   return (
     <aside className="hidden w-60 shrink-0 border-r border-border bg-sidebar md:flex md:flex-col">
       <div className="flex h-14 items-center px-4">
-        <span className="text-lg font-semibold tracking-tight">BluePrint</span>
+        <span className="font-heading text-lg font-semibold tracking-tight">BluePrint</span>
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-3">

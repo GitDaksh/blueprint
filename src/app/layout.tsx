@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CommandMenuProvider } from "@/components/command-menu-provider";
@@ -17,6 +17,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const sourceSerif = Source_Serif_4({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "BluePrint",
   description: "A modern productivity platform for developers.",
@@ -31,7 +37,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${sourceSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
