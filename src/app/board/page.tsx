@@ -3,10 +3,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { boardRepository } from "@/lib/storage/board-repository";
-import { columnRepository } from "@/lib/storage/column-repository";
 import { getLastBoardId } from "@/lib/storage/preferences";
-
-const DEFAULT_COLUMNS = ["To Do", "In Progress", "Done"];
+import { createBoardWithDefaultColumns } from "@/lib/board-seed";
 
 export default function BoardIndexPage() {
   const router = useRouter();
@@ -18,10 +16,7 @@ export default function BoardIndexPage() {
       let target = boards.find((b) => b.id === lastBoardId) ?? boards[0];
 
       if (!target) {
-        target = await boardRepository.create("My Board");
-        for (const title of DEFAULT_COLUMNS) {
-          await columnRepository.create({ boardId: target.id, title });
-        }
+        target = await createBoardWithDefaultColumns("My Board");
       }
 
       router.replace(`/board/${target.id}`);
