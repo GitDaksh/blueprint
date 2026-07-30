@@ -39,3 +39,12 @@ export const taskFormSchema = taskSchema.pick({
   priority: true,
 });
 export type TaskFormValues = z.infer<typeof taskFormSchema>;
+
+export const journalEntrySchema = z.object({
+  id: z.string(),
+  title: z.string().min(1, "Title is required").max(200),
+  content: z.string().max(20000).default(""),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+export type JournalEntry = z.infer<typeof journalEntrySchema>;
