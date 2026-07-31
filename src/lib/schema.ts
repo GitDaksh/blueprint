@@ -48,3 +48,21 @@ export const journalEntrySchema = z.object({
   updatedAt: z.string(),
 });
 export type JournalEntry = z.infer<typeof journalEntrySchema>;
+
+export const snippetSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1, "Title is required").max(200),
+  language: z.string().min(1, "Language is required"),
+  code: z.string().min(1, "Code is required").max(20000),
+  tags: z.array(z.string()).default([]),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+export type Snippet = z.infer<typeof snippetSchema>;
+
+export const snippetFormSchema = snippetSchema.pick({
+  title: true,
+  language: true,
+  code: true,
+});
+export type SnippetFormValues = z.infer<typeof snippetFormSchema>;
