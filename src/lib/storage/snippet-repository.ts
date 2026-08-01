@@ -19,6 +19,19 @@ export const snippetRepository = {
     );
   },
 
+  async search(query: string): Promise<Snippet[]> {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    return getAllSnippets()
+      .filter(
+        (snippet) =>
+          snippet.title.toLowerCase().includes(q) ||
+          snippet.language.toLowerCase().includes(q) ||
+          snippet.tags.some((tag) => tag.toLowerCase().includes(q))
+      )
+      .slice(0, 8);
+  },
+
   async create(
     input: Omit<z.input<typeof snippetSchema>, "id" | "createdAt" | "updatedAt">
   ): Promise<Snippet> {

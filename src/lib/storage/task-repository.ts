@@ -19,6 +19,18 @@ export const taskRepository = {
       .sort((a, b) => a.order - b.order);
   },
 
+  async search(query: string): Promise<Task[]> {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    return getAllTasks()
+      .filter(
+        (task) =>
+          task.title.toLowerCase().includes(q) ||
+          (task.description?.toLowerCase().includes(q) ?? false)
+      )
+      .slice(0, 8);
+  },
+
   async create(
     input: Omit<z.input<typeof taskSchema>, "id" | "order" | "createdAt" | "updatedAt">
   ): Promise<Task> {

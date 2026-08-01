@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Code2, Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,11 +16,20 @@ function languageLabel(value: string) {
   return SNIPPET_LANGUAGES.find((lang) => lang.value === value)?.label ?? value;
 }
 
-export default function SnippetsPage() {
+function SnippetsPageContent() {
+  const searchParams = useSearchParams();
+  const deepLinkedSnippetId = searchParams.get("snippetId");
+
   const { snippets, isLoading, refresh } = useSnippets();
   const [query, setQuery] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
   const [selected, setSelected] = useState<Snippet | null>(null);
+
+  useEffect(() => {
+    if (!deepLinkedSnippetId || snippets.length === 0) return;
+    const match = snippets.find((snippet) => snippet.id === deepLinkedSnippetId);
+    if (match) setSelected(match);
+  }, [deepLinkedSnippetId, snippets]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -117,5 +127,19 @@ export default function SnippetsPage() {
         onUpdated={refresh}
       />
     </div>
+  );
+}
+
+export default function SnippetsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+          Loading…
+        </div>
+      }
+    >
+      <SnippetsPageContent />
+    </Suspense>
   );
 }

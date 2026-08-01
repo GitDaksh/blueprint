@@ -23,6 +23,17 @@ export const journalRepository = {
     return getAllEntries().find((entry) => entry.id === id) ?? null;
   },
 
+  async search(query: string): Promise<JournalEntry[]> {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    return getAllEntries()
+      .filter(
+        (entry) =>
+          entry.title.toLowerCase().includes(q) || entry.content.toLowerCase().includes(q)
+      )
+      .slice(0, 8);
+  },
+
   async create(
     input: Omit<z.input<typeof journalEntrySchema>, "id" | "createdAt" | "updatedAt">
   ): Promise<JournalEntry> {

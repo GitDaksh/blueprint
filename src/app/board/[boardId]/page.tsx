@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { DragDropProvider } from "@dnd-kit/react";
 import { PointerSensor, PointerActivationConstraints } from "@dnd-kit/dom";
@@ -13,8 +13,11 @@ import { TaskDetailSheet } from "@/features/board/components/task-detail-sheet";
 import { BoardSwitcher } from "@/features/board/components/board-switcher";
 import type { Task } from "@/lib/schema";
 
-export default function BoardPage() {
+function BoardPageContent() {
   const { boardId } = useParams<{ boardId: string }>();
+  const searchParams = useSearchParams();
+  const deepLinkedTaskId = searchParams.get("taskId");
+
   const { board, columns, tasks, isLoading, refresh } = useBoard(boardId);
   const { groups, setGroups, isDragging, snapshot, persist } = useBoardGroups(
     tasks,
@@ -22,6 +25,12 @@ export default function BoardPage() {
     refresh
   );
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
+  useEffect(() => {
+    if (!deepLinkedTaskId || tasks.length === 0) return;
+    const match = tasks.find((task) => task.id === deepLinkedTaskId);
+    if (match) setSelectedTask(match);
+  }, [deepLinkedTaskId, tasks]);
 
   if (isLoading) {
     return (
@@ -97,5 +106,19 @@ export default function BoardPage() {
         onUpdated={refresh}
       />
     </div>
+  );
+}
+
+export default function BoardPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+          Loading board…
+        </div>
+      }
+    >
+      <BoardPageContent />
+    </Suspense>
   );
 }
