@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { FocusTimerWidget } from "@/components/focus-timer-widget";
 import { useCommandMenu } from "@/components/command-menu-provider";
 
 export function Topbar() {
@@ -19,7 +20,10 @@ export function Topbar() {
           ⌘K
         </kbd>
       </button>
-      <ThemeToggle />
+      <div className="flex items-center gap-2">
+        <FocusTimerWidget />
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

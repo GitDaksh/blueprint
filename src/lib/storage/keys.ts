@@ -5,4 +5,5 @@ export const STORAGE_KEYS = {
   lastBoardId: "blueprint:last-board-id",
   journalEntries: "blueprint:journal-entries",
   snippets: "blueprint:snippets",
+  focusSessions: "blueprint:focus-sessions",
 } as const;

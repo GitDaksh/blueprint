@@ -66,3 +66,11 @@ export const snippetFormSchema = snippetSchema.pick({
   code: true,
 });
 export type SnippetFormValues = z.infer<typeof snippetFormSchema>;
+
+export const focusSessionSchema = z.object({
+  id: z.string(),
+  label: z.string().max(200).optional(),
+  durationSeconds: z.number(),
+  completedAt: z.string(),
+});
+export type FocusSession = z.infer<typeof focusSessionSchema>;
