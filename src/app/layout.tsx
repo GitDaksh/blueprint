@@ -5,6 +5,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { CommandMenuProvider } from "@/components/command-menu-provider";
 import { CommandMenu } from "@/components/command-menu";
 import { FocusTimerProvider } from "@/components/focus-timer-provider";
+import { ShortcutsHelpProvider } from "@/components/shortcuts-help-provider";
+import { GlobalShortcuts } from "@/components/global-shortcuts";
+import { ShortcutsHelpDialog } from "@/components/shortcuts-help-dialog";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 
@@ -44,14 +47,18 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <CommandMenuProvider>
             <FocusTimerProvider>
-              <div className="flex min-h-screen">
-                <Sidebar />
-                <div className="flex flex-1 flex-col">
-                  <Topbar />
-                  <main className="flex-1">{children}</main>
+              <ShortcutsHelpProvider>
+                <div className="flex min-h-screen">
+                  <Sidebar />
+                  <div className="flex flex-1 flex-col">
+                    <Topbar />
+                    <main className="flex-1">{children}</main>
+                  </div>
                 </div>
-              </div>
-              <CommandMenu />
+                <CommandMenu />
+                <GlobalShortcuts />
+                <ShortcutsHelpDialog />
+              </ShortcutsHelpProvider>
             </FocusTimerProvider>
           </CommandMenuProvider>
         </ThemeProvider>
