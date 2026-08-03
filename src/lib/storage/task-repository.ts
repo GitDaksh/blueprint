@@ -13,6 +13,10 @@ function saveAllTasks(tasks: Task[]): void {
 }
 
 export const taskRepository = {
+  async getAll(): Promise<Task[]> {
+    return getAllTasks();
+  },
+
   async getByBoard(boardId: string): Promise<Task[]> {
     return getAllTasks()
       .filter((task) => task.boardId === boardId)

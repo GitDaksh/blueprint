@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { navLinks } from "@/lib/nav-links";
+import { navLinks, secondaryNavLinks, isNavLinkActive } from "@/lib/nav-links";
 import { cn } from "@/lib/utils";
 
 export function Sidebar() {
@@ -16,11 +16,28 @@ export function Sidebar() {
 
       <nav className="flex flex-1 flex-col gap-1 px-3">
         {navLinks.map((link) => {
-          const isActive =
-            link.href === "/"
-              ? pathname === "/"
-              : pathname === link.href || pathname.startsWith(`${link.href}/`);
+          const isActive = isNavLinkActive(pathname, link.href);
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn(
+                "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                isActive
+                  ? "bg-accent text-accent-foreground"
+                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              <link.icon className="h-4 w-4" />
+              {link.label}
+            </Link>
+          );
+        })}
+      </nav>
 
+      <nav className="flex flex-col gap-1 border-t border-border px-3 py-3">
+        {secondaryNavLinks.map((link) => {
+          const isActive = isNavLinkActive(pathname, link.href);
           return (
             <Link
               key={link.href}

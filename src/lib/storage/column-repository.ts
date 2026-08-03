@@ -12,6 +12,10 @@ function saveAllColumns(columns: Column[]): void {
 }
 
 export const columnRepository = {
+  async getAll(): Promise<Column[]> {
+    return getAllColumns();
+  },
+
   async getByBoard(boardId: string): Promise<Column[]> {
     return getAllColumns()
       .filter((c) => c.boardId === boardId)

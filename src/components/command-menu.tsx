@@ -12,7 +12,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { navLinks } from "@/lib/nav-links";
+import { navLinks, secondaryNavLinks } from "@/lib/nav-links";
 import { useBoardList } from "@/features/board/hooks/use-board-list";
 import { createBoardWithDefaultColumns } from "@/lib/board-seed";
 import { taskRepository } from "@/lib/storage/task-repository";
@@ -21,6 +21,8 @@ import { snippetRepository } from "@/lib/storage/snippet-repository";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useCommandMenu } from "./command-menu-provider";
 import type { Task, JournalEntry, Snippet } from "@/lib/schema";
+
+const allNavLinks = [...navLinks, ...secondaryNavLinks];
 
 export function CommandMenu() {
   const { open, setOpen } = useCommandMenu();
@@ -67,7 +69,7 @@ export function CommandMenu() {
   }
 
   const q = query.trim().toLowerCase();
-  const filteredNavLinks = navLinks.filter((link) => link.label.toLowerCase().includes(q));
+  const filteredNavLinks = allNavLinks.filter((link) => link.label.toLowerCase().includes(q));
   const filteredBoards = boards.filter((board) => board.name.toLowerCase().includes(q));
 
   return (

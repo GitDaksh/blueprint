@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, MotionConfig } from "motion/react";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { TaskCard } from "./task-card";
 import type { Task } from "@/lib/schema";
@@ -21,12 +22,21 @@ export function SortableTaskCard({ task, index, columnId, onSelect }: SortableTa
   });
 
   return (
-    <div
-      ref={ref}
-      className={isDragging ? "opacity-40" : undefined}
-      onClick={() => onSelect(task)}
-    >
-      <TaskCard task={task} />
-    </div>
+    <MotionConfig reducedMotion="user">
+      <motion.div
+        ref={ref}
+        onClick={() => onSelect(task)}
+        initial={{ opacity: 0, y: 6 }}
+        animate={{
+          opacity: isDragging ? 0.4 : 1,
+          y: 0,
+          scale: isDragging ? 1.03 : 1,
+        }}
+        transition={{ duration: 0.15, delay: index * 0.03 }}
+        className={isDragging ? "shadow-lg shadow-primary/20" : undefined}
+      >
+        <TaskCard task={task} />
+      </motion.div>
+    </MotionConfig>
   );
 }
