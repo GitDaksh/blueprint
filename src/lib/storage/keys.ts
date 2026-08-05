@@ -6,4 +6,5 @@ export const STORAGE_KEYS = {
   journalEntries: "blueprint:journal-entries",
   snippets: "blueprint:snippets",
   focusSessions: "blueprint:focus-sessions",
+  hasOnboarded: "blueprint:has-onboarded",
 } as const;

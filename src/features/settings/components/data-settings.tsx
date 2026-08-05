@@ -101,6 +101,22 @@ export function DataSettings() {
           </div>
           {importError && <p className="text-xs text-destructive">{importError}</p>}
 
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium">Welcome tour</p>
+              <p className="text-xs text-muted-foreground">Replay the onboarding introduction.</p>
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => {
+                window.localStorage.removeItem("blueprint:has-onboarded");
+                window.location.reload();
+              }}
+            >
+              Replay
+            </Button>
+          </div>
+
           <div className="flex items-center justify-between border-t border-border pt-4">
             <div>
               <p className="text-sm font-medium text-destructive">Reset all data</p>

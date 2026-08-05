@@ -8,3 +8,11 @@ export function getLastBoardId(): string | null {
 export function setLastBoardId(boardId: string): void {
   writeStorage(STORAGE_KEYS.lastBoardId, boardId);
 }
+
+export function hasOnboarded(): boolean {
+  return readStorage<boolean>(STORAGE_KEYS.hasOnboarded, false);
+}
+
+export function setHasOnboarded(): void {
+  writeStorage(STORAGE_KEYS.hasOnboarded, true);
+}
