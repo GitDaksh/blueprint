@@ -23,6 +23,7 @@ import {
   resetAllData,
   type ExportedData,
 } from "@/lib/data-transfer";
+import { STORAGE_KEYS } from "@/lib/storage/keys";
 
 export function DataSettings() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -109,7 +110,7 @@ export function DataSettings() {
             <Button
               variant="outline"
               onClick={() => {
-                window.localStorage.removeItem("blueprint:has-onboarded");
+                window.localStorage.removeItem(STORAGE_KEYS.hasOnboarded);
                 window.location.reload();
               }}
             >
