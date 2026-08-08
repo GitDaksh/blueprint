@@ -11,6 +11,7 @@ import { useBoardGroups } from "@/features/board/hooks/use-board-groups";
 import { BoardColumn } from "@/features/board/components/board-column";
 import { TaskDetailSheet } from "@/features/board/components/task-detail-sheet";
 import { BoardSwitcher } from "@/features/board/components/board-switcher";
+import { AddColumnButton } from "@/features/board/components/add-column-button";
 import type { Task } from "@/lib/schema";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -35,11 +36,11 @@ function BoardPageContent() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-y-auto">
         <div className="border-b border-border px-4 py-2">
           <Skeleton className="h-8 w-40" />
         </div>
-        <div className="flex flex-1 gap-4 overflow-x-auto p-6">
+        <div className="flex flex-1 flex-wrap content-start gap-4 p-6">
           {[0, 1, 2].map((col) => (
             <div key={col} className="flex w-72 shrink-0 flex-col gap-2 rounded-lg bg-muted/40 p-3">
               <Skeleton className="mb-2 h-4 w-20" />
@@ -64,7 +65,7 @@ function BoardPageContent() {
   }
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden">
+    <div className="flex flex-1 flex-col overflow-y-auto">
       <div className="border-b border-border px-4 py-2">
         <BoardSwitcher activeBoard={board} />
       </div>
@@ -97,17 +98,20 @@ function BoardPageContent() {
           });
         }}
       >
-        <div className="flex flex-1 gap-4 overflow-x-auto p-6">
+        <div className="flex flex-1 flex-wrap content-start gap-4 p-6">
           {columns.map((column) => (
             <BoardColumn
               key={column.id}
               column={column}
               tasks={groups[column.id] ?? []}
               boardId={board.id}
+              canDelete={columns.length > 1}
               onTaskCreated={refresh}
               onTaskSelect={setSelectedTask}
+              onColumnChanged={refresh}
             />
           ))}
+          <AddColumnButton boardId={board.id} onCreated={refresh} />
         </div>
       </DragDropProvider>
       <TaskDetailSheet

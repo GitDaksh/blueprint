@@ -5,22 +5,29 @@ import { CollisionPriority } from "@dnd-kit/abstract";
 import type { Column, Task } from "@/lib/schema";
 import { SortableTaskCard } from "./sortable-task-card";
 import { CreateTaskDialog } from "./create-task-dialog";
+import { EditableColumnTitle } from "./editable-column-title";
+import { ColumnMenu } from "./column-menu";
+import { deleteColumnAndTasks } from "@/lib/column-actions";
 import { cn } from "@/lib/utils";
 
 interface BoardColumnProps {
   column: Column;
   tasks: Task[];
   boardId: string;
+  canDelete: boolean;
   onTaskCreated: () => void;
   onTaskSelect: (task: Task) => void;
+  onColumnChanged: () => void;
 }
 
 export function BoardColumn({
   column,
   tasks,
   boardId,
+  canDelete,
   onTaskCreated,
   onTaskSelect,
+  onColumnChanged,
 }: BoardColumnProps) {
   const { ref, isDropTarget } = useDroppable({
     id: column.id,
@@ -29,11 +36,27 @@ export function BoardColumn({
     collisionPriority: CollisionPriority.Low,
   });
 
+  async function handleDeleteColumn() {
+    await deleteColumnAndTasks(boardId, column.id);
+    onColumnChanged();
+  }
+
   return (
     <div className="flex w-72 shrink-0 flex-col rounded-lg bg-muted/40 p-3">
-      <div className="mb-3 flex items-center justify-between px-1">
-        <h3 className="text-sm font-semibold">{column.title}</h3>
-        <span className="text-xs text-muted-foreground">{tasks.length}</span>
+      <div className="mb-3 flex items-center justify-between gap-1 px-1">
+        <EditableColumnTitle
+          columnId={column.id}
+          title={column.title}
+          onRenamed={onColumnChanged}
+        />
+        <div className="flex items-center gap-1">
+          <span className="text-xs text-muted-foreground">{tasks.length}</span>
+          <ColumnMenu
+            taskCount={tasks.length}
+            canDelete={canDelete}
+            onDelete={handleDeleteColumn}
+          />
+        </div>
       </div>
       <div
         ref={ref}
