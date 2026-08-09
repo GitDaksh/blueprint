@@ -4,7 +4,9 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
+import { useActivityHeatmap } from "@/features/dashboard/hooks/use-activity-heatmap";
 import { BarChart } from "@/features/dashboard/components/bar-chart";
+import { ContributionHeatmap } from "@/features/dashboard/components/contribution-heatmap";
 import { loadSampleData } from "@/lib/sample-data";
 import { CheckCircle2, Flame, Timer, Code2, Sparkles, type LucideIcon } from "lucide-react";
 
@@ -44,8 +46,9 @@ export default function DashboardPage() {
     recentActivity,
     refresh,
   } = useDashboardData();
+  const { days: heatmapDays, isLoading: heatmapLoading } = useActivityHeatmap();
 
-  if (isLoading) {
+  if (isLoading || heatmapLoading) {
     return (
       <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
         Loading dashboard…
@@ -63,6 +66,24 @@ export default function DashboardPage() {
         <StatCard icon={Flame} label="Day Streak" value={streak} />
         <StatCard icon={Code2} label="Snippets Saved" value={snippetCount} />
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm font-medium">Activity — Last 16 Weeks</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ContributionHeatmap days={heatmapDays} />
+          <div className="mt-2 flex items-center justify-end gap-1.5 text-xs text-muted-foreground">
+            <span>Less</span>
+            <span className="h-2.5 w-2.5 rounded-sm bg-muted" />
+            <span className="h-2.5 w-2.5 rounded-sm bg-primary/25" />
+            <span className="h-2.5 w-2.5 rounded-sm bg-primary/50" />
+            <span className="h-2.5 w-2.5 rounded-sm bg-primary/75" />
+            <span className="h-2.5 w-2.5 rounded-sm bg-primary" />
+            <span>More</span>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
