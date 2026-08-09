@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
 import { BarChart } from "@/features/dashboard/components/bar-chart";
-import { CheckCircle2, Flame, Timer, Code2, type LucideIcon } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { loadSampleData } from "@/lib/sample-data";
+import { CheckCircle2, Flame, Timer, Code2, Sparkles, type LucideIcon } from "lucide-react";
 
 function relativeTime(iso: string) {
   const minutes = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
@@ -33,25 +34,24 @@ function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: strin
 }
 
 export default function DashboardPage() {
-  const { isLoading, doneCount, focusMinutesToday, streak, snippetCount, weekSeries, recentActivity } =
-    useDashboardData();
+  const {
+    isLoading,
+    doneCount,
+    focusMinutesToday,
+    streak,
+    snippetCount,
+    weekSeries,
+    recentActivity,
+    refresh,
+  } = useDashboardData();
 
   if (isLoading) {
-  return (
-    <div className="flex flex-1 flex-col gap-6 p-6">
-      <Skeleton className="h-6 w-32" />
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {[0, 1, 2, 3].map((i) => (
-          <Skeleton key={i} className="h-16 rounded-lg" />
-        ))}
+    return (
+      <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+        Loading dashboard…
       </div>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Skeleton className="h-48 rounded-lg lg:col-span-2" />
-        <Skeleton className="h-48 rounded-lg" />
-      </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
@@ -80,7 +80,20 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-1">
             {recentActivity.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Nothing yet — go build something.</p>
+              <div className="flex flex-col items-center gap-3 py-4 text-center">
+                <p className="text-sm text-muted-foreground">Nothing yet — go build something.</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={async () => {
+                    await loadSampleData();
+                    await refresh();
+                  }}
+                >
+                  <Sparkles className="h-4 w-4" />
+                  Load Sample Data
+                </Button>
+              </div>
             ) : (
               recentActivity.map((item) => (
                 <Link

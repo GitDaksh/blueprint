@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Download, Upload, TriangleAlert } from "lucide-react";
+import { Download, Upload, TriangleAlert, Sparkles } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +23,7 @@ import {
   resetAllData,
   type ExportedData,
 } from "@/lib/data-transfer";
+import { loadSampleData } from "@/lib/sample-data";
 import { STORAGE_KEYS } from "@/lib/storage/keys";
 
 export function DataSettings() {
@@ -61,6 +62,11 @@ export function DataSettings() {
     window.location.reload();
   }
 
+  async function handleLoadSampleData() {
+    await loadSampleData();
+    window.location.reload();
+  }
+
   return (
     <>
       <Card>
@@ -73,6 +79,19 @@ export function DataSettings() {
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium">Load sample data</p>
+              <p className="text-xs text-muted-foreground">
+                Add example tasks, notes, and snippets to explore the app.
+              </p>
+            </div>
+            <Button variant="outline" onClick={handleLoadSampleData}>
+              <Sparkles className="h-4 w-4" />
+              Load Sample Data
+            </Button>
+          </div>
+
+          <div className="flex items-center justify-between border-t border-border pt-4">
             <div>
               <p className="text-sm font-medium">Export data</p>
               <p className="text-xs text-muted-foreground">Download everything as a JSON file.</p>

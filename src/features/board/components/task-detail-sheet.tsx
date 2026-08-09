@@ -20,9 +20,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { TaskForm } from "./task-form";
+import { TaskForm, type TaskSubmitValues } from "./task-form";
 import { taskRepository } from "@/lib/storage/task-repository";
-import type { Task, TaskFormValues } from "@/lib/schema";
+import type { Task } from "@/lib/schema";
 
 interface TaskDetailSheetProps {
   task: Task | null;
@@ -31,7 +31,7 @@ interface TaskDetailSheetProps {
 }
 
 export function TaskDetailSheet({ task, onOpenChange, onUpdated }: TaskDetailSheetProps) {
-  async function handleUpdate(values: TaskFormValues) {
+  async function handleUpdate(values: TaskSubmitValues) {
     if (!task) return;
     await taskRepository.update(task.id, values);
     onUpdated();
@@ -60,6 +60,7 @@ export function TaskDetailSheet({ task, onOpenChange, onUpdated }: TaskDetailShe
                 description: task.description ?? "",
                 priority: task.priority,
               }}
+              defaultTags={task.tags}
               submitLabel="Save Changes"
               onSubmit={handleUpdate}
               onCancel={() => onOpenChange(false)}

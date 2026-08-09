@@ -10,9 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { TaskForm } from "./task-form";
+import { TaskForm, type TaskSubmitValues } from "./task-form";
 import { taskRepository } from "@/lib/storage/task-repository";
-import type { TaskFormValues } from "@/lib/schema";
 
 interface CreateTaskDialogProps {
   boardId: string;
@@ -23,7 +22,7 @@ interface CreateTaskDialogProps {
 export function CreateTaskDialog({ boardId, columnId, onCreated }: CreateTaskDialogProps) {
   const [open, setOpen] = useState(false);
 
-  async function handleSubmit(values: TaskFormValues) {
+  async function handleSubmit(values: TaskSubmitValues) {
     await taskRepository.create({ ...values, boardId, columnId });
     setOpen(false);
     onCreated();

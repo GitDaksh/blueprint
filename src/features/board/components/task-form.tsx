@@ -1,6 +1,7 @@
 "use client";
 
 import { z } from "zod";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { taskFormSchema, type TaskFormValues } from "@/lib/schema";
@@ -16,26 +17,39 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
+export interface TaskSubmitValues extends TaskFormValues {
+  tags: string[];
+}
+
 interface TaskFormProps {
   defaultValues?: TaskFormValues;
+  defaultTags?: string[];
   submitLabel?: string;
-  onSubmit: (values: TaskFormValues) => Promise<void>;
+  onSubmit: (values: TaskSubmitValues) => Promise<void>;
   onCancel: () => void;
 }
 
 export function TaskForm({
   defaultValues,
+  defaultTags = [],
   submitLabel = "Create Task",
   onSubmit,
   onCancel,
 }: TaskFormProps) {
+  const [tagsInput, setTagsInput] = useState(defaultTags.join(", "));
+
   const form = useForm<z.input<typeof taskFormSchema>, unknown, TaskFormValues>({
     resolver: zodResolver(taskFormSchema),
     defaultValues: defaultValues ?? { title: "", description: "", priority: "medium" },
   });
 
   async function handleSubmit(values: TaskFormValues) {
-    await onSubmit(values);
+    const tags = tagsInput
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+
+    await onSubmit({ ...values, tags });
     form.reset();
   }
 
@@ -97,6 +111,16 @@ export function TaskForm({
             </Field>
           )}
         />
+
+        <Field>
+          <FieldLabel htmlFor="task-form-tags">Tags</FieldLabel>
+          <Input
+            id="task-form-tags"
+            value={tagsInput}
+            onChange={(event) => setTagsInput(event.target.value)}
+            placeholder="frontend, bug, urgent"
+          />
+        </Field>
 
         <Field orientation="horizontal" className="justify-end pt-2">
           <Button type="button" variant="ghost" onClick={onCancel}>
