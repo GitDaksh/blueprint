@@ -14,6 +14,12 @@ function daysAgo(days: number, hour = 10): string {
   return date.toISOString();
 }
 
+function dateOffset(days: number): string {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
 export async function loadSampleData(): Promise<void> {
   const board = await boardRepository.create("Sample Project");
   const todo = await columnRepository.create({ boardId: board.id, title: "To Do" });
@@ -26,6 +32,7 @@ export async function loadSampleData(): Promise<void> {
     description?: string;
     priority: "low" | "medium" | "high";
     tags: string[];
+    dueDate?: string;
   }> = [
     {
       columnId: todo.id,
@@ -45,6 +52,7 @@ export async function loadSampleData(): Promise<void> {
       title: "Fix Safari flexbox bug on settings page",
       priority: "high",
       tags: ["bug", "frontend"],
+      dueDate: dateOffset(-1),
     },
     {
       columnId: inProgress.id,
@@ -52,6 +60,7 @@ export async function loadSampleData(): Promise<void> {
       description: "Wire up fuzzy search across tasks, notes, and snippets.",
       priority: "high",
       tags: ["feature", "frontend"],
+      dueDate: dateOffset(0),
     },
     {
       columnId: inProgress.id,

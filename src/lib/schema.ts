@@ -11,6 +11,7 @@ export const taskSchema = z.object({
   description: z.string().max(2000).optional(),
   priority: prioritySchema.default("medium"),
   tags: z.array(z.string()).default([]),
+  dueDate: z.string().optional(),
   order: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
@@ -37,6 +38,7 @@ export const taskFormSchema = taskSchema.pick({
   title: true,
   description: true,
   priority: true,
+  dueDate: true,
 });
 export type TaskFormValues = z.infer<typeof taskFormSchema>;
 

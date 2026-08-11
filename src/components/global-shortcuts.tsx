@@ -38,6 +38,7 @@ export function GlobalShortcuts() {
         clearPending();
         const destinations: Record<string, string> = {
           d: "/",
+          t: "/today",
           b: "/board",
           j: "/journal",
           s: "/snippets",

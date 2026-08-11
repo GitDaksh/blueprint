@@ -91,26 +91,46 @@ export function TaskForm({
           )}
         />
 
-        <Controller
-          name="priority"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="task-form-priority">Priority</FieldLabel>
-              <Select name={field.name} value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger id="task-form-priority" aria-invalid={fieldState.invalid}>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-3">
+          <Controller
+            name="priority"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor="task-form-priority">Priority</FieldLabel>
+                <Select name={field.name} value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger id="task-form-priority" aria-invalid={fieldState.invalid}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                  </SelectContent>
+                </Select>
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+
+          <Controller
+            name="dueDate"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor="task-form-due-date">Due Date</FieldLabel>
+                <Input
+                  type="date"
+                  id="task-form-due-date"
+                  value={field.value ?? ""}
+                  onChange={(event) => field.onChange(event.target.value || undefined)}
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+        </div>
 
         <Field>
           <FieldLabel htmlFor="task-form-tags">Tags</FieldLabel>

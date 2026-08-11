@@ -59,6 +59,7 @@ export function TaskDetailSheet({ task, onOpenChange, onUpdated }: TaskDetailShe
                 title: task.title,
                 description: task.description ?? "",
                 priority: task.priority,
+                dueDate: task.dueDate,
               }}
               defaultTags={task.tags}
               submitLabel="Save Changes"
