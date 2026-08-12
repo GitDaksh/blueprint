@@ -8,6 +8,7 @@ import { useActivityHeatmap } from "@/features/dashboard/hooks/use-activity-heat
 import { BarChart } from "@/features/dashboard/components/bar-chart";
 import { ContributionHeatmap } from "@/features/dashboard/components/contribution-heatmap";
 import { loadSampleData } from "@/lib/sample-data";
+import { CornerMarks } from "@/components/corner-marks";
 import { CheckCircle2, Flame, Timer, Code2, Sparkles, type LucideIcon } from "lucide-react";
 
 function relativeTime(iso: string) {
@@ -21,14 +22,15 @@ function relativeTime(iso: string) {
 
 function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string | number }) {
   return (
-    <Card>
+    <Card className="group relative">
+      <CornerMarks className="opacity-0 transition-opacity duration-150 group-hover:opacity-100" />
       <CardContent className="flex items-center gap-3 p-4">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
           <Icon className="h-4 w-4" />
         </div>
         <div>
-          <p className="text-lg font-semibold leading-none">{value}</p>
-          <p className="text-xs text-muted-foreground">{label}</p>
+          <p className="font-mono text-lg font-semibold leading-none">{value}</p>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
         </div>
       </CardContent>
     </Card>
@@ -58,7 +60,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
-      <h1 className="font-heading text-lg font-semibold">Dashboard</h1>
+      <h1 className="font-heading text-2xl font-semibold">Dashboard</h1>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard icon={CheckCircle2} label="Tasks Completed" value={doneCount} />

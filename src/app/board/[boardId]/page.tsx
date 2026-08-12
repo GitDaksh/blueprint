@@ -15,6 +15,7 @@ import { BoardSwitcher } from "@/features/board/components/board-switcher";
 import { AddColumnButton } from "@/features/board/components/add-column-button";
 import { PriorityView } from "@/features/board/components/priority-view";
 import { ListView } from "@/features/board/components/list-view";
+import { BoardOverview } from "@/features/board/components/board-overview";
 import type { Task } from "@/lib/schema";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -75,6 +76,8 @@ function BoardPageContent() {
       <div className="border-b border-border px-4 py-2">
         <BoardSwitcher activeBoard={board} />
       </div>
+
+      <BoardOverview tasks={tasks} columns={columns} />
 
       <Tabs
         value={view}

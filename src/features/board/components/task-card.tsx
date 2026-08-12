@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { CalendarClock } from "lucide-react";
 import { priorityStyles } from "@/lib/priority-styles";
 import { dueDateStatus } from "@/lib/date-utils";
+import { CornerMarks } from "@/components/corner-marks";
 import type { Task } from "@/lib/schema";
 
 const dueDateStyles: Record<"overdue" | "today" | "upcoming", string> = {
@@ -13,7 +14,8 @@ const dueDateStyles: Record<"overdue" | "today" | "upcoming", string> = {
 
 export function TaskCard({ task }: { task: Task }) {
   return (
-    <Card className="cursor-pointer gap-3 p-3 transition-colors hover:border-foreground/20">
+    <Card className="group relative cursor-pointer gap-3 p-3 transition-colors hover:border-primary/40">
+      <CornerMarks className="opacity-0 transition-opacity duration-150 group-hover:opacity-100" />
       <CardContent className="p-0">
         <p className="text-sm font-medium leading-snug">{task.title}</p>
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
