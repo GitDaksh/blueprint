@@ -30,7 +30,7 @@ export function BoardSwitcher({ activeBoard }: BoardSwitcherProps) {
         <DropdownMenuTrigger
           render={<Button variant="ghost" className="gap-2 px-2 text-lg font-semibold" />}
         >
-          <span className="font-heading">{activeBoard.name}</span>
+          <span className="font-heading text-xl">{activeBoard.name}</span>
           <ChevronsUpDown className="h-4 w-4 text-muted-foreground" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-56">

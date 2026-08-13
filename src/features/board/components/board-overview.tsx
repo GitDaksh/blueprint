@@ -28,23 +28,29 @@ export function BoardOverview({ tasks, columns }: BoardOverviewProps) {
     <div className="flex flex-col gap-2 border-b border-border px-4 py-3">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 text-xs text-muted-foreground">
-          <span>
+          <span className="font-mono">
             <span className="font-medium text-foreground">{done}</span>/{total} done
           </span>
           {overdue > 0 && (
-            <Link href="/today" className="flex items-center gap-1 text-destructive hover:underline">
+            <Link
+              href="/today"
+              className="flex items-center gap-1 font-mono text-destructive hover:underline"
+            >
               <AlertCircle className="h-3.5 w-3.5" />
               {overdue} overdue
             </Link>
           )}
           {dueToday > 0 && (
-            <Link href="/today" className="flex items-center gap-1 text-primary hover:underline">
+            <Link
+              href="/today"
+              className="flex items-center gap-1 font-mono text-primary hover:underline"
+            >
               <CalendarClock className="h-3.5 w-3.5" />
               {dueToday} due today
             </Link>
           )}
         </div>
-        <span className="text-xs font-medium text-muted-foreground">{percentDone}%</span>
+        <span className="font-mono text-xs font-medium text-muted-foreground">{percentDone}%</span>
       </div>
 
       <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-muted">

@@ -50,7 +50,7 @@ export function BoardColumn({
           onRenamed={onColumnChanged}
         />
         <div className="flex items-center gap-1">
-          <span className="text-xs text-muted-foreground">{tasks.length}</span>
+          <span className="font-mono text-xs text-muted-foreground">{tasks.length}</span>
           <ColumnMenu
             taskCount={tasks.length}
             canDelete={canDelete}
