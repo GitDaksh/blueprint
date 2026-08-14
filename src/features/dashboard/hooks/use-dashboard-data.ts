@@ -17,6 +17,14 @@ interface ActivityItem {
   icon: LucideIcon;
 }
 
+export interface BoardSummary {
+  id: string;
+  name: string;
+  total: number;
+  done: number;
+  percentDone: number;
+}
+
 function computeStreak(completedDates: Set<string>): number {
   let streak = 0;
   const cursor = new Date();
@@ -42,6 +50,7 @@ export function useDashboardData() {
   const [snippetCount, setSnippetCount] = useState(0);
   const [weekSeries, setWeekSeries] = useState<{ label: string; value: number }[]>([]);
   const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([]);
+  const [boardsSummary, setBoardsSummary] = useState<BoardSummary[]>([]);
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
@@ -59,13 +68,24 @@ export function useDashboardData() {
 
     let done = 0;
     const taskActivity: ActivityItem[] = [];
+    const summary: BoardSummary[] = [];
 
     for (const { board, columns, tasks } of boardTaskData) {
-      const columnById = new Map(columns.map((c) => [c.id, c]));
-      for (const task of tasks) {
-        const columnTitle = columnById.get(task.columnId)?.title ?? "";
-        if (columnTitle.toLowerCase() === "done") done++;
+      const doneColumnIds = new Set(
+        columns.filter((c) => c.title.toLowerCase() === "done").map((c) => c.id)
+      );
+      const boardDone = tasks.filter((t) => doneColumnIds.has(t.columnId)).length;
+      done += boardDone;
 
+      summary.push({
+        id: board.id,
+        name: board.name,
+        total: tasks.length,
+        done: boardDone,
+        percentDone: tasks.length === 0 ? 0 : Math.round((boardDone / tasks.length) * 100),
+      });
+
+      for (const task of tasks) {
         taskActivity.push({
           id: `task-${task.id}`,
           title: task.title,
@@ -76,6 +96,7 @@ export function useDashboardData() {
       }
     }
     setDoneCount(done);
+    setBoardsSummary(summary);
 
     const [journalEntries, snippets, focusSessions] = await Promise.all([
       journalRepository.getAll(),
@@ -145,6 +166,7 @@ export function useDashboardData() {
     snippetCount,
     weekSeries,
     recentActivity,
+    boardsSummary,
     refresh,
   };
 }

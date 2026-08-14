@@ -7,6 +7,8 @@ import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data"
 import { useActivityHeatmap } from "@/features/dashboard/hooks/use-activity-heatmap";
 import { BarChart } from "@/features/dashboard/components/bar-chart";
 import { ContributionHeatmap } from "@/features/dashboard/components/contribution-heatmap";
+import { BoardsOverview } from "@/features/dashboard/components/boards-overview";
+import { TodayGlance } from "@/features/dashboard/components/today-glance";
 import { loadSampleData } from "@/lib/sample-data";
 import { CornerMarks } from "@/components/corner-marks";
 import { CheckCircle2, Flame, Timer, Code2, Sparkles, type LucideIcon } from "lucide-react";
@@ -37,6 +39,14 @@ function StatCard({ icon: Icon, label, value }: { icon: LucideIcon; label: strin
   );
 }
 
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <CardTitle className="font-mono text-xs font-medium uppercase tracking-wide text-muted-foreground">
+      {children}
+    </CardTitle>
+  );
+}
+
 export default function DashboardPage() {
   const {
     isLoading,
@@ -46,6 +56,7 @@ export default function DashboardPage() {
     snippetCount,
     weekSeries,
     recentActivity,
+    boardsSummary,
     refresh,
   } = useDashboardData();
   const { days: heatmapDays, isLoading: heatmapLoading } = useActivityHeatmap();
@@ -69,9 +80,10 @@ export default function DashboardPage() {
         <StatCard icon={Code2} label="Snippets Saved" value={snippetCount} />
       </div>
 
-      <Card>
+      <Card className="group relative">
+        <CornerMarks className="opacity-0 transition-opacity duration-150 group-hover:opacity-100" />
         <CardHeader>
-          <CardTitle className="text-sm font-medium">Activity — Last 16 Weeks</CardTitle>
+          <SectionTitle>Activity — Last 16 Weeks</SectionTitle>
         </CardHeader>
         <CardContent>
           <ContributionHeatmap days={heatmapDays} />
@@ -88,18 +100,40 @@ export default function DashboardPage() {
       </Card>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
+        <Card className="group relative lg:col-span-2">
+          <CornerMarks className="opacity-0 transition-opacity duration-150 group-hover:opacity-100" />
           <CardHeader>
-            <CardTitle className="text-sm font-medium">Focus Time — Last 7 Days</CardTitle>
+            <SectionTitle>Focus Time — Last 7 Days</SectionTitle>
           </CardHeader>
           <CardContent>
             <BarChart data={weekSeries} />
           </CardContent>
         </Card>
 
+        <Card className="group relative">
+          <CornerMarks className="opacity-0 transition-opacity duration-150 group-hover:opacity-100" />
+          <CardHeader>
+            <SectionTitle>Today at a Glance</SectionTitle>
+          </CardHeader>
+          <CardContent>
+            <TodayGlance />
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium">Recent Activity</CardTitle>
+            <SectionTitle>Your Boards</SectionTitle>
+          </CardHeader>
+          <CardContent>
+            <BoardsOverview boards={boardsSummary} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <SectionTitle>Recent Activity</SectionTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-1">
             {recentActivity.length === 0 ? (
@@ -122,8 +156,9 @@ export default function DashboardPage() {
                 <Link
                   key={item.id}
                   href={item.href}
-                  className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-muted/50"
+                  className="group relative flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-muted/50"
                 >
+                  <CornerMarks className="opacity-0 transition-opacity duration-150 group-hover:opacity-100" />
                   <item.icon className="h-4 w-4 shrink-0 text-muted-foreground" />
                   <span className="flex-1 truncate">{item.title}</span>
                   <span className="shrink-0 text-xs text-muted-foreground">
